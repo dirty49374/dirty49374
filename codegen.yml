@@ -1,0 +1,6 @@
+overwrite: true
+schema: "./src/lib/server/dirty49374.graphql"
+generates:
+  src/lib/server/__generated__/dirty49374.schema.ts:
+    plugins:
+      - "graphql-resolver-typescript-gen"

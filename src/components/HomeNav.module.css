@@ -1,0 +1,8 @@
+.menu1 {
+  @apply mt-1;
+}
+
+.menu2 {
+  @apply mt-1 ml-2;
+}
+

@@ -1,0 +1,157 @@
+scalar Timestamp
+directive @ownResolver on FIELD_DEFINITION
+
+enum ContentType {
+  Markdown
+  PlainText
+}
+
+interface Node {
+  id: ID!
+}
+
+type PageInfo {
+  startCursor: String
+  endCursor: String
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+}
+
+enum Role {
+  Admin
+  Member
+}
+
+type Me implements Node {
+  id: ID!
+  userId: ID
+  name: String
+  email: String
+  avatar: String!
+  role: Role
+  loggedIn: Boolean!
+}
+
+type User implements Node {
+  id: ID! @ownResolver
+  name: String!
+  email: String!
+  avatar: String! @ownResolver
+  role: Role!
+}
+
+type Post implements Node {
+  id: ID! @ownResolver
+  author: User @ownResolver
+  title: String!
+  type: ContentType!
+  category: String!
+  content: String!
+  postedAt: Timestamp!
+}
+
+type PostEdge {
+  cursor: String!
+  node: Post!
+}
+
+type PostConnection {
+  edges: [PostEdge!]!
+  nodes: [Post!]!
+  pageInfo: PageInfo!
+}
+
+type Category {
+  id: String!
+  name: String!
+}
+
+type ServiceConfig implements Node {
+  id: ID! @ownResolver
+  categories: [Category!]!
+}
+
+# -------------------------------------------------------------
+
+type Query {
+  health: String!
+  me: Me!
+  user(id: ID!): User
+  post(id: ID!): Post
+  posts(
+    first: Int
+    last: Int
+    after: String
+    before: String
+    category: String
+  ): PostConnection!
+  node(id: ID!): Node
+  serviceConfig: ServiceConfig!
+}
+
+# -------------------------------------------------------------
+
+input LoginInput {
+  email: String!
+  password: String!
+}
+type LoginOutput {
+  me: Me
+}
+
+input SigninInput {
+  email: String!
+  password: String!
+}
+
+input CreatePostInput {
+  title: String!
+  category: String!
+  content: String!
+  type: ContentType!
+}
+
+type CreatePostOutput {
+  post: Post
+}
+
+input CategoryInput {
+  id: String!
+  name: String!
+}
+input UpdateCategoryConfigInput {
+  categories: [CategoryInput!]!
+}
+
+type UpdateConfigOutput {
+  serviceConfig: ServiceConfig!
+}
+
+input DeletePostInput {
+  id: ID!
+}
+
+type DeletePostOutput {
+  success: Boolean!
+}
+
+input UpdatePostModifyInput {
+  id: ID!
+  title: String!
+  category: String!
+  content: String!
+}
+
+type UpdatePostOutput {
+  post: Post
+}
+
+type Mutation {
+  # login(input: LoginInput!): LoginOutput!
+  # signin(input: SigninInput!): User
+  createPost(input: CreatePostInput!): CreatePostOutput!
+  deletePost(input: DeletePostInput!): DeletePostOutput!
+  updatePost(modify: UpdatePostModifyInput): UpdatePostOutput!
+
+  updateServiceConfig(category: UpdateCategoryConfigInput): UpdateConfigOutput!
+}

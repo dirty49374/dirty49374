@@ -1,0 +1,12 @@
+projects:
+  app:
+    schema:
+      - ./schemas/directives.graphql
+      - ./schemas/relay.graphql
+      - ./src/lib/server/dirty49374.graphql
+    documents:
+      - ./src/**/*.{tsx,ts}
+    extensions:
+      endpoints:
+        default:
+          url: http://localhost:4000/api/graphql
