@@ -14,6 +14,7 @@ export const schema = makeExecutableSchema({
   } as any,
 });
 
+/* eslint-disable */
 export const getEnveloped = envelop({
   plugins: [
     useSchema(schema),
