@@ -70,6 +70,3 @@ export default NextAuth({
     },
   },
 });
-
-console.log(process.env.GITHUB_CLIENT_ID);
-console.log(process.env.GITHUB_CLIENT_SECRET);

@@ -21,8 +21,8 @@ type CategoryAdminProps = {
 
 const CategoryAdmin: React.FC<CategoryAdminProps> = ({ className, qref }) => {
   const [categories, setCategories] = useState<Category[]>([]);
-  const categoryId = useInputState("");
-  const categoryName = useInputState("");
+  const [categoryId] = useInputState("");
+  const [categoryName] = useInputState("");
   const [error, setError] = useErrorState();
 
   const categoryEdit = useListEdit<Category>([]);

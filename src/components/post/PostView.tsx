@@ -42,8 +42,8 @@ const PostView: React.FC<PostViewProps> = ({ qref, className }) => {
 
   const [edit, setEdit] = useState<"edit" | "preview" | "view">("view");
 
-  const title = useInputState(data.title);
-  const content = useInputState(data.content);
+  const [title, setTitle] = useInputState(data.title);
+  const [content, setContent] = useInputState(data.content);
 
   const deletePost = useDeletePostMutation();
   const updatePost = useUpdatePostMutation();
@@ -54,8 +54,8 @@ const PostView: React.FC<PostViewProps> = ({ qref, className }) => {
     });
   };
   const beginEdit = () => {
-    title.onChange({ target: { value: data.title } } as any);
-    content.onChange({ target: { value: data.content } } as any);
+    setTitle(data.title);
+    setContent(data.content);
     setEdit("edit");
   };
   const handleUpdate = () => {

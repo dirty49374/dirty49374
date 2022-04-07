@@ -1,10 +1,8 @@
-import "@uiw/react-md-editor/markdown-editor.css";
 import "@uiw/react-markdown-preview/markdown.css";
-import { InputState } from "hooks/useInputState";
+import "@uiw/react-md-editor/markdown-editor.css";
+import { InputStateProps } from "hooks/useInputState";
 import dynamic from "next/dynamic";
 import React from "react";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
 import MarkdownCode from "./MarkdownCode";
 // import MarkDownPreview from '@uiw/react-markdown-preview';
 
@@ -16,7 +14,7 @@ const MDPreview = dynamic(() => import("@uiw/react-markdown-preview"), {
 type PostMarkdownProps = {
   className?: string;
   edit?: "edit" | "preview" | "view";
-  content: InputState;
+  content: InputStateProps;
 };
 
 const PostMarkdown: React.FC<PostMarkdownProps> = ({

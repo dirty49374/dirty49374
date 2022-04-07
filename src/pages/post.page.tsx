@@ -10,19 +10,16 @@ import Router from "next/router";
 import React from "react";
 import dynamic from "next/dynamic";
 
-const MDEditor = dynamic(
-  () => import("@uiw/react-md-editor"),
-  { ssr: false }
-);
+const MDEditor = dynamic(() => import("@uiw/react-md-editor"), { ssr: false });
 
 type PostPageProps = {};
 
 const PostPage: React.FC<PostPageProps> = ({}) => {
   const { serviceConfig } = useMe({ redirectTo: "/api/auth/signin" });
 
-  const title = useInputState("");
-  const content = useInputState("");
-  const category = useInputState(serviceConfig?.categories[0].id || "");
+  const [title] = useInputState("");
+  const [content] = useInputState("");
+  const [category] = useInputState(serviceConfig?.categories[0].id || "");
   const [error, setError] = useErrorState();
 
   const createPost = useCreatePostMutation();
@@ -47,6 +44,13 @@ const PostPage: React.FC<PostPageProps> = ({}) => {
 
   return (
     <Page>
+      <div>
+        <input
+          className="w-full"
+          placeholder="제목을 입력하세요..."
+          {...title}
+        />
+      </div>
       <div className="mt-5">
         <select {...category}>
           {serviceConfig?.categories.map((c) => (
@@ -55,13 +59,6 @@ const PostPage: React.FC<PostPageProps> = ({}) => {
             </option>
           ))}
         </select>
-      </div>
-      <div>
-        <input
-          className="w-full"
-          placeholder="제목을 입력하세요..."
-          {...title}
-        />
       </div>
       <div className="mt-5">
         <MDEditor height={512} minHeight={256} className="h-96" {...content} />

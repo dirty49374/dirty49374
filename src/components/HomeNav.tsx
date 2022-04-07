@@ -1,7 +1,7 @@
 import useMe from "hooks/useMe";
 import { signIn, signOut } from "next-auth/react";
 import Link from "next/link";
-import React from "react";
+import React, { Key } from "react";
 import Avatar from "./Avatar";
 import styles from "./HomeNav.module.css";
 
@@ -9,8 +9,26 @@ type HomeNavProps = {
   className?: string;
 };
 
+type MenuProps = {
+  title: string;
+  url?: string;
+  key?: Key | null | undefined;
+};
+
 const HomeNav: React.FC<HomeNavProps> = ({ className }) => {
   const { me, serviceConfig } = useMe();
+
+  const menuLv1 = ({ title, url, key }: MenuProps) => (
+    <div key={key} className={styles.menu1}>
+      {url ? <Link href={url}>{title}</Link> : <>{title}</>}
+    </div>
+  );
+
+  const menuLv2 = ({ title, url, key }: MenuProps) => (
+    <div key={key} className={styles.menu2}>
+      {url ? <Link href={url}>{title}</Link> : <>{title}</>}
+    </div>
+  );
 
   return (
     <div className="flex flex-col w-48 bg-zinc-900 min-h-screen">
@@ -52,36 +70,23 @@ const HomeNav: React.FC<HomeNavProps> = ({ className }) => {
         )}
       </div>
 
-      <div className="ml-2">
-        <div className={styles.menu1}>
-          <Link href="/">Home</Link>
-        </div>
-      </div>
+      <div className="ml-2">{menuLv1({ title: "Home", url: "/" })}</div>
 
       <div className="ml-2">
-        <div className={styles.menu1}>글타래</div>
-        {serviceConfig?.categories.map((c, n) => (
-          <div className={styles.menu2} key={c.id}>
-            <Link href={`/category/${c.id}`}>{c.name}</Link>
-          </div>
-        ))}
-        <div className={styles.menu2}>
-          <Link href="/post">글쓰기</Link>
-        </div>
+        {menuLv1({ title: "글타래" })}
+        {serviceConfig?.categories.map((c, n) =>
+          menuLv2({ title: c.name, url: `/category/${c.id}`, key: c.id })
+        )}
+        {menuLv2({ title: "글쓰기", url: "/post" })}
       </div>
 
-      <div className="ml-2">
-        <Link href="/admin">관리</Link>
-      </div>
+      <div className="ml-2">{menuLv1({ title: "관리", url: "/admin" })}</div>
 
       <div className="ml-2">
         <div className={styles.menu1}>Test</div>
-        <div className={styles.menu2}>
-          <Link href="/tests/health">Health</Link>
-        </div>
-        <div className={styles.menu2}>
-          <Link href="/tests/design">Design Guide</Link>
-        </div>
+        {menuLv2({ title: "Health", url: "/tests/health" })}
+        {menuLv2({ title: "Chat", url: "/tests/chat" })}
+        {menuLv2({ title: "Design", url: "/tests/design" })}
       </div>
 
       {/* <div className="mt-20">{JSON.stringify(me, null, 4)}</div> */}

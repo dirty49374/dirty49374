@@ -4,8 +4,8 @@ import { Types } from "mongoose";
 import { adjustRole } from "./auth";
 import { MeId, PostId, ServiceConfigId, UserId } from "./ids";
 import { MongoosePaginator } from "./mgutils/paginator";
+import { PubSubChannels, ServerContext } from "./server.context";
 import { PostModel, UserModel } from "./server.models";
-import { ServerContext } from "./server.context";
 import { loadServiceConfigOrDefault } from "./serviceConfig";
 import { Me, Resolvers, Role, User } from "./__generated__/dirty49374.schema";
 
@@ -126,6 +126,20 @@ export const resolvers: Resolvers<ServerContext> = {
 
       await serviceConfig.save();
       return { serviceConfig };
+    },
+    chat: (_, { message }, ctx) => {
+      ctx.pubSub.publish("newChat", message);
+      return false;
+    },
+  },
+  Subscription: {
+    newChat: {
+      subscribe: (_, __, ctx) => {
+        return ctx.pubSub.asyncIterator("newChat") as any;
+      },
+      resolve: (payload: PubSubChannels["newChat"][0]) => {
+        return payload;
+      },
     },
   },
 };

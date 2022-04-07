@@ -3,7 +3,19 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { getToken, JWT } from "next-auth/jwt";
 import { createUniqueFieldDataLoader } from "./dataloaders";
 import { PostModel, ServiceConfigModel, UserModel } from "./server.models";
-import { Post, Role, ServiceConfig, User } from "./__generated__/dirty49374.schema";
+import { Post, Role, ServiceConfig, User, Chat } from "./__generated__/dirty49374.schema";
+import { PubSub } from "graphql-subscriptions";
+import { TypedPubSub } from "typed-graphql-subscriptions";
+
+// 1
+export type PubSubChannels = {
+  newChat: [string];
+};
+
+// 2
+export const pubSub = new TypedPubSub<PubSubChannels>(new PubSub());
+(pubSub as any)._IX = Math.random();
+
 
 export type ServerContext = Awaited<ReturnType<typeof serverContextFactory>> & {
   req: NextApiRequest;
@@ -42,5 +54,6 @@ export const serverContextFactory = async (context: any) => {
       (keys) => ({ key: { $in: keys } }),
       (config) => config.key,
     ),
+    pubSub,
   };
 };

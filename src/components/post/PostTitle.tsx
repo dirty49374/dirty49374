@@ -1,10 +1,10 @@
-import { InputState, useInputState } from "hooks/useInputState";
+import { InputStateProps } from "hooks/useInputState";
 import React from "react";
 
 type PostTitleProps = {
   className?: string;
   edit?: "edit" | "preview" | "view";
-  title: InputState;
+  title: InputStateProps;
 };
 
 const PostTitle: React.FC<PostTitleProps> = ({ className, title, edit }) => {

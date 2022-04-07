@@ -35,6 +35,12 @@ export interface Category  {
   name: string;
 }
 
+export interface Chat  {
+  __typename?: 'Chat';
+  userId: string;
+  message: string;
+}
+
 export interface CreatePostOutput  {
   __typename?: 'CreatePostOutput';
   post?: Post | null;
@@ -67,6 +73,7 @@ export interface Mutation  {
   deletePost: DeletePostOutput;
   updatePost: UpdatePostOutput;
   updateServiceConfig: UpdateConfigOutput;
+  chat?: any | null;
 }
 
 export interface PageInfo  {
@@ -113,6 +120,11 @@ export interface Query  {
 export interface ServiceConfig  {
   __typename?: 'ServiceConfig';
   categories: Category[];
+}
+
+export interface Subscription  {
+  __typename?: 'Subscription';
+  newChat: string;
 }
 
 export interface UpdateConfigOutput  {
@@ -190,6 +202,14 @@ export type CategoryResolver<TContext = any> = {
 
 
 
+export type ChatResolver<TContext = any> = {
+  
+
+  __isTypeOf?: (obj: Chat, context: TContext, info: GraphQLResolveInfo) => Promise<boolean> | boolean;
+};
+
+
+
 export type CreatePostOutputResolver<TContext = any> = {
   
 
@@ -232,12 +252,16 @@ export type MutationUpdatePostArgs = {
 export type MutationUpdateServiceConfigArgs = {
   category?: UpdateCategoryConfigInput | null;
 };
+export type MutationChatArgs = {
+  message: string;
+};
 
 export type MutationResolver<TContext = any> = {
   createPost: (parent: Mutation, args: MutationCreatePostArgs, context: TContext, info: GraphQLResolveInfo) => Promise<CreatePostOutput> | CreatePostOutput;
   deletePost: (parent: Mutation, args: MutationDeletePostArgs, context: TContext, info: GraphQLResolveInfo) => Promise<DeletePostOutput> | DeletePostOutput;
   updatePost: (parent: Mutation, args: MutationUpdatePostArgs, context: TContext, info: GraphQLResolveInfo) => Promise<UpdatePostOutput> | UpdatePostOutput;
   updateServiceConfig: (parent: Mutation, args: MutationUpdateServiceConfigArgs, context: TContext, info: GraphQLResolveInfo) => Promise<UpdateConfigOutput> | UpdateConfigOutput;
+  chat: (parent: Mutation, args: MutationChatArgs, context: TContext, info: GraphQLResolveInfo) => Promise<any | null> | any | null;
 
   __isTypeOf?: (obj: Mutation, context: TContext, info: GraphQLResolveInfo) => Promise<boolean> | boolean;
 };
@@ -318,6 +342,17 @@ export type ServiceConfigResolver<TContext = any> = {
 
 
 
+export type SubscriptionResolver<TContext = any> = {
+  newChat: {
+    subscribe: (parent: any, args: {}, context: TContext, info: GraphQLResolveInfo) => AsyncIterable<string> | Promise<AsyncIterable<string>>,
+    resolve: (parent: string, args: {}, context: TContext, info: GraphQLResolveInfo) => string,
+  },
+
+  __isTypeOf?: (obj: Subscription, context: TContext, info: GraphQLResolveInfo) => Promise<boolean> | boolean;
+};
+
+
+
 export type UpdateConfigOutputResolver<TContext = any> = {
   
 
@@ -346,6 +381,7 @@ export type UserResolver<TContext = any> = {
 // all resolvers ----------------------------
 export type Resolvers<TContext = any> = {
   Category?: CategoryResolver<TContext>;
+  Chat?: ChatResolver<TContext>;
   CreatePostOutput?: CreatePostOutputResolver<TContext>;
   DeletePostOutput?: DeletePostOutputResolver<TContext>;
   LoginOutput?: LoginOutputResolver<TContext>;
@@ -357,6 +393,7 @@ export type Resolvers<TContext = any> = {
   PostEdge?: PostEdgeResolver<TContext>;
   Query: QueryResolver<TContext>;
   ServiceConfig: ServiceConfigResolver<TContext>;
+  Subscription: SubscriptionResolver<TContext>;
   UpdateConfigOutput?: UpdateConfigOutputResolver<TContext>;
   UpdatePostOutput?: UpdatePostOutputResolver<TContext>;
   User: UserResolver<TContext>;

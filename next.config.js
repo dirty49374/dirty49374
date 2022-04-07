@@ -3,7 +3,7 @@ const removeImports = require("next-remove-imports")();
 module.exports = (phase, { defaultConfig }) => {
   /** @type {import('next').NextConfig} */
   const nextConfig = {
-    reactStrictMode: true,
+    reactStrictMode: false,
     pageExtensions: ['page.tsx', 'page.ts', 'page.jsx', 'page.js'],
     webpack: (config, { isServer, webpack }) => {
       config.module.rules.push({

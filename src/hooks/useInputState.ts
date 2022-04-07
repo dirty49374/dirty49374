@@ -3,24 +3,29 @@ import { ChangeEvent, useCallback, useMemo, useState } from "react";
 type InputStateChangeEvent = ChangeEvent<
   HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
 >;
-export type InputState = {
+
+export type InputStateProps = {
   value: string;
-  onChange: (e: InputStateChangeEvent|string|undefined) => void;
+  onChange: (e: InputStateChangeEvent | string | undefined) => void;
 };
+export type InputState = [InputStateProps, (v: string) => void];
 
 export const useInputState = (initialValue: string): InputState => {
-  const [value, setState] = useState(initialValue);
+  const [value, setValue] = useState(initialValue);
   const onChange = useCallback(
-    (e: InputStateChangeEvent|string|undefined) => {
+    (e: InputStateChangeEvent | string | undefined) => {
       if (e) {
-        if (typeof e === 'string') setState(e);
-        else setState(e.target.value);
+        if (typeof e === "string") setValue(e);
+        else setValue(e.target.value);
       } else {
-        setState('');
+        setValue("");
       }
     },
-    [setState]
+    [setValue]
   );
 
-  return useMemo(() => ({ value, onChange }), [value, onChange]);
+  return useMemo(
+    () => [{ value, onChange }, setValue],
+    [value, onChange, setValue]
+  );
 };

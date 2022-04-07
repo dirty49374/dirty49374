@@ -154,4 +154,17 @@ type Mutation {
   updatePost(modify: UpdatePostModifyInput): UpdatePostOutput!
 
   updateServiceConfig(category: UpdateCategoryConfigInput): UpdateConfigOutput!
+
+  chat(message: String!): Boolean
+}
+
+# -------------------------------------------------------------
+
+type Chat {
+  userId: ID!
+  message: String!
+}
+
+type Subscription {
+  newChat: String!
 }
