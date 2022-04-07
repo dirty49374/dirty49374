@@ -12,6 +12,9 @@ import type { FetchFunction } from "relay-runtime";
 
 import fetchGraphQL from "./fetchGraphQL";
 
+const sseEndpoint =
+  (process.env.NEXT_PUBLIC_GRAPHQL_URI || "http://localhost:3000/api/graphql") + '-sse';
+
 let relayEnvironment: Environment;
 
 const createEnvironment = () => {
@@ -28,7 +31,7 @@ const createEnvironment = () => {
     const { createClient } = require("graphql-sse");
 
     const sseClient = createClient({
-      url: "http://localhost:3000/api/graphql-sse",
+      url: sseEndpoint,
       headers: {
         "Content-Type": "application/json",
       },
