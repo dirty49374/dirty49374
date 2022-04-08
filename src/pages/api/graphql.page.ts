@@ -1,11 +1,15 @@
+import { envelop, useExtendContext, useSchema } from "@envelop/core";
 import {
   getGraphQLParameters,
   processRequest,
-  renderGraphiQL, sendResult,
-  shouldRenderGraphiQL
+  renderGraphiQL,
+  sendMultipartResponseResult,
+  sendResponseResult,
+  shouldRenderGraphiQL,
 } from "graphql-helix";
 import { initServer } from "lib/server/init";
-import { getEnveloped } from "lib/server/schema";
+import { getEnveloped, schema } from "lib/server/schema";
+import { serverContextFactory } from "lib/server/server.context";
 
 async function nextSendPushResult(
   pushResult: any,
@@ -68,6 +72,12 @@ export default async function handler(req: any, res: any) {
       contextFactory,
     });
 
-    sendResult(result, res);
+    if (result.type === "RESPONSE") {
+      sendResponseResult(result, res);
+    } else if (result.type === "MULTIPART_RESPONSE") {
+      sendMultipartResponseResult(result, res);
+    } else if (result.type === "PUSH") {
+      nextSendPushResult(result, res);
+    }
   }
 }
